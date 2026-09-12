@@ -13,13 +13,25 @@
             box-sizing: border-box;
         }
 
-        body {
-            font-family: 'Courier New', monospace;
-            background: linear-gradient(135deg, #0f0c29, #302b63, #24243e);
-            overflow-x: hidden;
+        html {
+            scroll-behavior: smooth;
         }
 
-        .animated-bg {
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+            overflow-x: hidden;
+            perspective: 1000px;
+        }
+
+        /* 3D Background Animation */
+        .bg-animated {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
             background: linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab);
             background-size: 400% 400%;
             animation: gradient 15s ease infinite;
@@ -31,191 +43,406 @@
             100% { background-position: 0% 50%; }
         }
 
-        .neon-text {
-            text-shadow: 0 0 10px #00ff00, 0 0 20px #00ff00, 0 0 30px #00ff00;
-            color: #00ff00;
+        .bg-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(15, 12, 41, 0.8);
+            z-index: 1;
         }
 
-        .neon-box {
-            border: 2px solid;
-            box-shadow: 0 0 20px;
-            animation: neon-glow 2s ease-in-out infinite;
+        .content {
+            position: relative;
+            z-index: 10;
         }
 
-        @keyframes neon-glow {
-            0%, 100% { box-shadow: 0 0 20px, inset 0 0 20px; }
-            50% { box-shadow: 0 0 40px, inset 0 0 40px; }
+        /* 3D Sphere Animation */
+        .sphere-container {
+            width: 200px;
+            height: 200px;
+            perspective: 1000px;
+            margin: 0 auto;
         }
 
-        .gradient-1 { background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); }
-        .gradient-2 { background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); }
-        .gradient-3 { background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); }
-        .gradient-4 { background: linear-gradient(135deg, #43e97b 0%, #38f9d7 100%); }
-        .gradient-5 { background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); }
-        .gradient-6 { background: linear-gradient(135deg, #30cfd0 0%, #330867 100%); }
-
-        .glass-effect {
-            background: rgba(255, 255, 255, 0.1);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+        .sphere {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            box-shadow: 
+                0 0 60px rgba(102, 126, 234, 0.8),
+                0 0 100px rgba(118, 75, 162, 0.6),
+                inset -30px -30px 60px rgba(0, 0, 0, 0.3),
+                inset 30px 30px 60px rgba(255, 255, 255, 0.2);
+            animation: rotate3d 20s linear infinite, float 3s ease-in-out infinite;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform-style: preserve-3d;
         }
 
-        .hover-lift {
-            transition: all 0.3s ease;
+        @keyframes rotate3d {
+            0% { transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg); }
+            25% { transform: rotateX(45deg) rotateY(45deg) rotateZ(0deg); }
+            50% { transform: rotateX(90deg) rotateY(90deg) rotateZ(45deg); }
+            75% { transform: rotateX(45deg) rotateY(45deg) rotateZ(90deg); }
+            100% { transform: rotateX(0deg) rotateY(0deg) rotateZ(360deg); }
         }
 
-        .hover-lift:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.5);
-        }
-
-        .floating {
-            animation: floating 3s ease-in-out infinite;
-        }
-
-        @keyframes floating {
+        @keyframes float {
             0%, 100% { transform: translateY(0px); }
             50% { transform: translateY(-20px); }
         }
 
-        .pulse-glow {
-            animation: pulse-glow 2s ease-in-out infinite;
+        .sphere i {
+            font-size: 80px;
+            color: white;
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.8));
+            z-index: 2;
+            position: relative;
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
+        /* Glass Morphism Cards */
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: 30px;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            transform: translateZ(0);
         }
 
+        .glass-card:hover {
+            background: rgba(255, 255, 255, 0.15);
+            border-color: rgba(255, 255, 255, 0.4);
+            transform: translateY(-20px) scale(1.02);
+            box-shadow: 
+                0 20px 60px rgba(0, 0, 0, 0.3),
+                0 0 60px rgba(102, 126, 234, 0.3);
+        }
+
+        /* Gradient Text Animation */
+        .gradient-text {
+            background: linear-gradient(90deg, #667eea, #764ba2, #f093fb, #667eea);
+            background-size: 200% auto;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradient-shift 6s linear infinite;
+        }
+
+        @keyframes gradient-shift {
+            0% { background-position: 0%; }
+            100% { background-position: 200%; }
+        }
+
+        /* Floating Particles */
+        .particle {
+            position: fixed;
+            pointer-events: none;
+            z-index: 5;
+        }
+
+        .particle-sphere {
+            border-radius: 50%;
+            filter: blur(1px);
+        }
+
+        /* Contact Card 3D */
+        .contact-card {
+            position: relative;
+            border-radius: 25px;
+            overflow: hidden;
+            transition: all 0.5s cubic-bezier(0.23, 1, 0.320, 1);
+        }
+
+        .contact-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, transparent, rgba(255, 255, 255, 0.1));
+            transform: translateX(-100%);
+            transition: transform 0.5s ease;
+            z-index: 1;
+        }
+
+        .contact-card:hover::before {
+            transform: translateX(100%);
+        }
+
+        .contact-card-content {
+            position: relative;
+            z-index: 2;
+        }
+
+        /* Skill Tags Animation */
         .skill-tag {
             display: inline-block;
-            padding: 8px 16px;
-            margin: 5px;
-            border-radius: 20px;
-            font-size: 14px;
-            font-weight: bold;
+            padding: 10px 20px;
+            margin: 8px;
+            border-radius: 50px;
+            font-weight: 600;
+            background: rgba(255, 255, 255, 0.1);
+            border: 2px solid;
             color: white;
-            transition: all 0.3s ease;
+            transition: all 0.4s cubic-bezier(0.23, 1, 0.320, 1);
+            cursor: pointer;
+            transform: translateZ(0);
+            position: relative;
         }
 
         .skill-tag:hover {
-            transform: scale(1.1);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: scale(1.15) translateY(-8px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .skill-1 { border-color: #667eea; color: #667eea; }
+        .skill-1:hover { background: rgba(102, 126, 234, 0.2); box-shadow: 0 0 30px rgba(102, 126, 234, 0.5); }
+
+        .skill-2 { border-color: #f093fb; color: #f093fb; }
+        .skill-2:hover { background: rgba(240, 147, 251, 0.2); box-shadow: 0 0 30px rgba(240, 147, 251, 0.5); }
+
+        .skill-3 { border-color: #4facfe; color: #4facfe; }
+        .skill-3:hover { background: rgba(79, 172, 254, 0.2); box-shadow: 0 0 30px rgba(79, 172, 254, 0.5); }
+
+        .skill-4 { border-color: #43e97b; color: #43e97b; }
+        .skill-4:hover { background: rgba(67, 233, 123, 0.2); box-shadow: 0 0 30px rgba(67, 233, 123, 0.5); }
+
+        .skill-5 { border-color: #fa709a; color: #fa709a; }
+        .skill-5:hover { background: rgba(250, 112, 154, 0.2); box-shadow: 0 0 30px rgba(250, 112, 154, 0.5); }
+
+        .skill-6 { border-color: #fee140; color: #fee140; }
+        .skill-6:hover { background: rgba(254, 225, 64, 0.2); box-shadow: 0 0 30px rgba(254, 225, 64, 0.5); }
+
+        /* Smooth Text Animation */
+        h1 {
+            animation: textGlow 3s ease-in-out infinite;
+        }
+
+        @keyframes textGlow {
+            0%, 100% { text-shadow: 0 0 20px rgba(102, 126, 234, 0.5); }
+            50% { text-shadow: 0 0 40px rgba(102, 126, 234, 0.9); }
+        }
+
+        /* Smooth Scroll */
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+
+        /* Title Pulse */
+        .title-pulse {
+            animation: titlePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes titlePulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.8; }
+        }
+
+        /* Loading Animation */
+        .loading-line {
+            height: 3px;
+            background: linear-gradient(90deg, transparent, #667eea, transparent);
+            animation: loading 2s ease-in-out infinite;
+            border-radius: 2px;
+        }
+
+        @keyframes loading {
+            0% { transform: translateX(-100%); }
+            100% { transform: translateX(100%); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sphere-container {
+                width: 150px;
+                height: 150px;
+            }
+
+            .sphere i {
+                font-size: 60px;
+            }
+
+            h1 {
+                font-size: 2.5rem;
+            }
         }
     </style>
 </head>
-<body>
+<body class="scroll-smooth">
     <!-- Animated Background -->
-    <div class="fixed inset-0 animated-bg opacity-30 pointer-events-none"></div>
+    <div class="bg-animated"></div>
+    <div class="bg-overlay"></div>
 
-    <!-- Main Container -->
-    <div class="relative z-10 min-h-screen flex items-center justify-center p-4">
-        <div class="w-full max-w-2xl">
+    <!-- Particles Background -->
+    <div id="particles"></div>
+
+    <!-- Main Content -->
+    <div class="content min-h-screen flex flex-col items-center justify-center px-4 py-12">
+        
+        <!-- Header Section -->
+        <div class="text-center mb-12">
+            <!-- 3D Rotating Sphere -->
+            <div class="sphere-container mb-8">
+                <div class="sphere">
+                    <i class="fas fa-code"></i>
+                </div>
+            </div>
+
+            <!-- Main Title -->
+            <h1 class="text-6xl md:text-7xl font-black mb-3">
+                <span class="gradient-text">404</span>
+            </h1>
+
+            <!-- Subtitle with Animation -->
+            <div class="mb-6">
+                <p class="text-2xl md:text-3xl font-bold text-white mb-2">
+                    { <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-purple-500">Developer</span> }
+                </p>
+                <div class="loading-line w-32 mx-auto"></div>
+            </div>
+
+            <!-- Description -->
+            <p class="text-gray-300 text-lg max-w-md mx-auto leading-relaxed">
+                💻 Coding • 🚀 Building • ✨ Innovating
+            </p>
+        </div>
+
+        <!-- Skills Section -->
+        <div class="glass-card p-8 mb-12 max-w-2xl w-full" style="border-radius: 30px;">
+            <h2 class="text-3xl font-bold text-center mb-8">
+                <span class="gradient-text">Skills & Expertise</span>
+            </h2>
+            <div class="flex flex-wrap justify-center gap-3">
+                <div class="skill-tag skill-1">💾 Full Stack</div>
+                <div class="skill-tag skill-2">🎨 Frontend</div>
+                <div class="skill-tag skill-3">⚙️ Backend</div>
+                <div class="skill-tag skill-4">🔧 DevOps</div>
+                <div class="skill-tag skill-5">🎯 Problem Solving</div>
+                <div class="skill-tag skill-6">🌟 Clean Code</div>
+            </div>
+        </div>
+
+        <!-- Contact Section -->
+        <div class="w-full max-w-4xl">
+            <h2 class="text-3xl font-bold text-center text-white mb-10">
+                <span class="gradient-text">Get In Touch</span>
+            </h2>
             
-            <!-- Header Section -->
-            <div class="text-center mb-12 floating">
-                <!-- Animated Avatar -->
-                <div class="inline-block mb-8">
-                    <div class="gradient-1 w-40 h-40 rounded-full flex items-center justify-center text-7xl shadow-2xl pulse-glow border-4 border-purple-400">
-                        <i class="fas fa-code text-white"></i>
-                    </div>
-                </div>
-
-                <!-- Name -->
-                <h1 class="text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-purple-500 to-cyan-500 mb-2">
-                    404
-                </h1>
-
-                <!-- Subtitle -->
-                <p class="text-2xl font-bold bg-gradient-to-r from-green-400 to-blue-500 bg-clip-text text-transparent mb-2">
-                    { Developer }
-                </p>
-
-                <!-- Description -->
-                <p class="text-gray-300 text-lg mb-8 max-w-md mx-auto">
-                    💻 Building digital solutions | 🚀 Exploring new tech | ✨ Creating awesome stuff
-                </p>
-            </div>
-
-            <!-- Tech Stack Section -->
-            <div class="glass-effect rounded-xl p-8 mb-8 border-2 border-transparent hover-lift"
-                 style="border-image: linear-gradient(135deg, #667eea, #764ba2, #f093fb) 1;">
-                <h2 class="text-2xl font-bold text-center mb-6">
-                    <span class="bg-gradient-to-r from-yellow-400 to-red-500 bg-clip-text text-transparent">
-                        Skills & Expertise
-                    </span>
-                </h2>
-                <div class="flex flex-wrap justify-center gap-2">
-                    <div class="skill-tag gradient-2">💾 Full Stack</div>
-                    <div class="skill-tag gradient-3">🎨 Frontend</div>
-                    <div class="skill-tag gradient-4">⚙️ Backend</div>
-                    <div class="skill-tag gradient-5">🔧 DevOps</div>
-                    <div class="skill-tag gradient-6">🎯 Problem Solving</div>
-                    <div class="skill-tag gradient-1">🌟 Clean Code</div>
-                </div>
-            </div>
-
-            <!-- Contact Section -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 
                 <!-- Email Card -->
-                <div class="group hover-lift">
-                    <div class="gradient-2 p-1 rounded-xl">
-                        <div class="glass-effect rounded-[10px] p-6 h-full flex flex-col items-center justify-center">
-                            <i class="fas fa-envelope text-4xl text-pink-400 mb-4"></i>
-                            <p class="text-gray-300 text-sm mb-3 text-center">Email</p>
-                            <a href="mailto:nullpo.root@gmail.com" 
-                               class="text-transparent bg-clip-text bg-gradient-to-r from-pink-400 to-red-500 font-bold hover:from-pink-300 hover:to-red-400 transition-all">
-                                nullpo.root@gmail.com
-                            </a>
+                <div class="contact-card glass-card p-8 text-center group" style="border-radius: 25px;">
+                    <div class="contact-card-content">
+                        <div class="mb-4 text-5xl">
+                            <i class="fas fa-envelope" style="color: #ff6b9d;"></i>
                         </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Email</h3>
+                        <a href="mailto:nullpo.root@gmail.com" 
+                           class="text-gray-300 hover:text-pink-400 transition-colors duration-300 break-all">
+                            nullpo.root@gmail.com
+                        </a>
                     </div>
                 </div>
 
                 <!-- GitHub Card -->
-                <div class="group hover-lift">
-                    <div class="gradient-3 p-1 rounded-xl">
-                        <div class="glass-effect rounded-[10px] p-6 h-full flex flex-col items-center justify-center">
-                            <i class="fab fa-github text-4xl text-cyan-400 mb-4"></i>
-                            <p class="text-gray-300 text-sm mb-3">GitHub</p>
-                            <a href="https://github.com/nullpo-root" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-blue-500 font-bold hover:from-cyan-300 hover:to-blue-400 transition-all">
-                                @nullpo-root
-                            </a>
+                <div class="contact-card glass-card p-8 text-center group" style="border-radius: 25px;">
+                    <div class="contact-card-content">
+                        <div class="mb-4 text-5xl">
+                            <i class="fab fa-github" style="color: #4facfe;"></i>
                         </div>
+                        <h3 class="text-xl font-bold text-white mb-3">GitHub</h3>
+                        <a href="https://github.com/nullpo-root" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="text-gray-300 hover:text-blue-400 transition-colors duration-300">
+                            @nullpo-root
+                        </a>
                     </div>
                 </div>
 
                 <!-- Telegram Card -->
-                <div class="group hover-lift">
-                    <div class="gradient-4 p-1 rounded-xl">
-                        <div class="glass-effect rounded-[10px] p-6 h-full flex flex-col items-center justify-center">
-                            <i class="fab fa-telegram text-4xl text-green-400 mb-4"></i>
-                            <p class="text-gray-300 text-sm mb-3">Telegram</p>
-                            <a href="https://t.me/tpl404" 
-                               target="_blank" 
-                               rel="noopener noreferrer"
-                               class="text-transparent bg-clip-text bg-gradient-to-r from-green-400 to-emerald-500 font-bold hover:from-green-300 hover:to-emerald-400 transition-all">
-                                @tpl404
-                            </a>
+                <div class="contact-card glass-card p-8 text-center group" style="border-radius: 25px;">
+                    <div class="contact-card-content">
+                        <div class="mb-4 text-5xl">
+                            <i class="fab fa-telegram" style="color: #43e97b;"></i>
                         </div>
+                        <h3 class="text-xl font-bold text-white mb-3">Telegram</h3>
+                        <a href="https://t.me/tpl404" 
+                           target="_blank" 
+                           rel="noopener noreferrer"
+                           class="text-gray-300 hover:text-green-400 transition-colors duration-300">
+                            @tpl404
+                        </a>
                     </div>
                 </div>
 
             </div>
-
-            <!-- Footer -->
-            <div class="text-center">
-                <p class="text-gray-400 text-sm">
-                    <i class="fas fa-code"></i> Made with <i class="fas fa-heart text-red-500"></i> by 404
-                </p>
-                <p class="text-gray-500 text-xs mt-2">© 2026 - All Rights Reserved</p>
-            </div>
-
         </div>
+
+        <!-- Footer -->
+        <div class="text-center mt-16 text-gray-400">
+            <p class="text-sm mb-2">
+                <i class="fas fa-code"></i> Made with <i class="fas fa-heart text-red-500"></i> by 404
+            </p>
+            <p class="text-xs text-gray-500">© 2026 - All Rights Reserved</p>
+        </div>
+
     </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 30;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle particle-sphere';
+                
+                const size = Math.random() * 60 + 20;
+                const x = Math.random() * window.innerWidth;
+                const y = Math.random() * window.innerHeight;
+                const duration = Math.random() * 20 + 10;
+                const delay = Math.random() * 5;
+                
+                const colors = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
+                const randomColor = colors[Math.floor(Math.random() * colors.length)];
+                
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                particle.style.left = x + 'px';
+                particle.style.top = y + 'px';
+                particle.style.backgroundColor = randomColor;
+                particle.style.opacity = Math.random() * 0.3 + 0.1;
+                particle.style.animation = `float ${duration}s ease-in-out ${delay}s infinite`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // Parallax Effect
+        document.addEventListener('mousemove', (e) => {
+            const particles = document.querySelectorAll('.particle');
+            const x = e.clientX / window.innerWidth;
+            const y = e.clientY / window.innerHeight;
+            
+            particles.forEach(particle => {
+                const offsetX = (x - 0.5) * 100;
+                const offsetY = (y - 0.5) * 100;
+                particle.style.transform = `translate(${offsetX * 0.1}px, ${offsetY * 0.1}px)`;
+            });
+        });
+
+        // Initialize on load
+        window.addEventListener('load', createParticles);
+    </script>
 
 </body>
 </html>
